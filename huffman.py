@@ -4,22 +4,32 @@ from tree import Node
 class Huffman:
     root: Node
 
-    def __init__(self, sentence: str):
+    def __init__(self, sentence: str = None, char_dict: dict[str, float] = None):
         self.encode_dict: dict[str, str] = {}  # this is initialized here as it is a mutable object.
 
-        # we have to get the frequency of the characters.
-        char_dict: dict = {}
-        for char in sentence.lower():
-            if char not in char_dict.keys():
-                char_dict[char] = 1
-            else:
-                char_dict[char] += 1
+        # if char_dict is none, we have to find the frequency of the characters.
+        if char_dict is None:
+            char_dict: dict[str, int] = {}
+            for char in sentence.lower():
+                if char not in char_dict.keys():
+                    char_dict[char] = 1
+                else:
+                    char_dict[char] += 1
 
         # we convert it to a node list.
         node_list: list[Node] = []
         for key, value in char_dict.items():
             node_list.append(Node(leaf=True, key=key, value=value))
 
+        # now we can create the tree.
+        self.create_tree(node_list)
+
+        # now we can create the code dictionary.
+        self.bin()
+
+    def create_tree(self, node_list: list[Node]):
+        # this is used to create the node tree from the node list.
+        # here we use the standard Huffman algorithm to arrange the tree.
         n = len(node_list)
         char_list = node_list
         for i in range(n - 1):
@@ -35,9 +45,8 @@ class Huffman:
         # at the end, there will be one node left which should be the root node.
         self.root = char_list[0]
 
-        self.bin()
-
     def bin(self) -> None:  # this is just to create the binary dictionary for encoding.
+        # it creates the encoding bits from the node tree.
         # now we have the tree, but we do not know where anything is on the tree
         # I will be using a BFS algorithm to do this.
         # we have a dictionary that we append nodes to when we reach them. We pop them when we scan them.

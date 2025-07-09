@@ -8,11 +8,11 @@ class Node:
     # we do not need to know a node's parent since we will only be traversing from the root down.
     leaf: bool
     key: str
-    value: int
+    value: float
     left: Self
     right: Self
 
-    def __init__(self, leaf: bool = False, key: str = None, value: int = None, left: Self = None, right: Self = None):
+    def __init__(self, leaf: bool = False, key: str = None, value: float = None, left: Self = None, right: Self = None):
         self.leaf = leaf
         self.key = key
         self.value = value
