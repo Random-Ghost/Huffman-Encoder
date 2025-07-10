@@ -13,6 +13,25 @@ def to_char_dict(sentence: str) -> dict[str, float]:
     return char_dict
 
 
+def create_tree(node_list: list[Node]) -> Node:
+    # this is used to create the node tree from the node list.
+    # here we use the standard Huffman algorithm to arrange the tree.
+    n = len(node_list)
+    char_list = node_list
+    for i in range(n - 1):
+        # first we sort to make sure the lowest two are at the back of the list
+        char_list = sorted(char_list, reverse=True)
+        # we combine them to make a parent node
+        temp_node = Node(leaf=False, left=char_list[-2], right=char_list[-1])
+        # we remove the last two
+        char_list.pop()
+        char_list.pop()
+        # then we add the new node to the list
+        char_list.append(temp_node)
+    # at the end, there will be one node left which should be the root node.
+    return char_list[0]
+
+
 class Huffman:
     root: Node
 
@@ -29,28 +48,10 @@ class Huffman:
             node_list.append(Node(leaf=True, key=key, value=value))
 
         # now we can create the tree.
-        self.create_tree(node_list)
+        self.root = create_tree(node_list)
 
         # now we can create the code dictionary.
         self.bin()
-
-    def create_tree(self, node_list: list[Node]):
-        # this is used to create the node tree from the node list.
-        # here we use the standard Huffman algorithm to arrange the tree.
-        n = len(node_list)
-        char_list = node_list
-        for i in range(n - 1):
-            # first we sort to make sure the lowest two are at the back of the list
-            char_list = sorted(char_list, reverse=True)
-            # we combine them to make a parent node
-            temp_node = Node(leaf=False, left=char_list[-2], right=char_list[-1])
-            # we remove the last two
-            char_list.pop()
-            char_list.pop()
-            # then we add the new node to the list
-            char_list.append(temp_node)
-        # at the end, there will be one node left which should be the root node.
-        self.root = char_list[0]
 
     def bin(self) -> None:  # this is just to create the binary dictionary for encoding.
         # it creates the encoding bits from the node tree.
