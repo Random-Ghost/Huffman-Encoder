@@ -1,6 +1,18 @@
 from tree import Node
 
 
+def to_char_dict(sentence: str) -> dict[str, float]:
+    n: int = len(sentence)
+    per: float = 1 / n
+    char_dict: dict[str, float] = {}
+    for char in sentence:
+        if char in char_dict.keys():
+            char_dict[char] += per
+        else:
+            char_dict[char] = per
+    return char_dict
+
+
 class Huffman:
     root: Node
 
@@ -9,12 +21,7 @@ class Huffman:
 
         # if char_dict is none, we have to find the frequency of the characters.
         if char_dict is None:
-            char_dict: dict[str, int] = {}
-            for char in sentence.lower():
-                if char not in char_dict.keys():
-                    char_dict[char] = 1
-                else:
-                    char_dict[char] += 1
+            char_dict: dict[str, float] = to_char_dict(sentence)
 
         # we convert it to a node list.
         node_list: list[Node] = []
